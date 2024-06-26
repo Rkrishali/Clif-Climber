@@ -1,118 +1,143 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import React, { useState, useLayoutEffect, useEffect } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import SignUp from './src/screens/Signup';
+import LogIn from './src/screens/Login';
+import Home from './src/screens/Home';
+import Profile from './src/screens/Profile';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import MyCart from './src/screens/MyCart';
+import Notification from './src/screens/Notification';
+import Splash from './src/screens/Splash';
+import CategoryDetailScreen from './src/screens/CategoryDetail';
+import ProductDetailScreen from './src/screens/ProductDetail';
+import ProductInfo from './src/screens/ProductInformation';
+import { Provider } from 'react-redux';
+import { store } from './src/redux/store/store';
+import Favourite from './src/screens/Favourite';
+import Address from './src/screens/Address';
+import AddAddress from './src/screens/AddAddress';
+import DropdownComponent from './src/screens/Dropdown';
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+function HomeTabs() {
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+          if (route.name === 'Home') {
+            iconName = 'home';
+          } else if (route.name === 'Cart') {
+            iconName = 'shopping-cart';
+          } else if (route.name === 'Notification') {
+            iconName = 'bell';
+          } else if (route.name === 'Profile') {
+            iconName = 'user';
+          }
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
+          return <Icon name={iconName} size={size} color={focused ? 'tomato' : 'grey'} />;
+        },
+        tabBarActiveTintColor: 'tomato',
+        tabBarInactiveTintColor: 'gray',
+      })}
+    >
+      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen name="Cart" component={MyCart}
+        options={{
+          headerShown: false
+        }}
       />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+      <Tab.Screen name="Notification" component={Notification} />
+
+
+      <Tab.Screen
+        options={{
+          title: "Account",
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            fontSize: 22,
+
+          },
+          headerTitleAlign: 'center'
+        }}
+        name="Profile"
+        component={Profile} />
+    </Tab.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+function App() {
+
+  return (
+    <Provider
+      store={store}
+    >
+      <NavigationContainer>
+        <Stack.Navigator >
+          <Stack.Screen
+            name="Splash"
+            component={Splash}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Signup"
+            component={SignUp}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="HomeTabs"
+            component={HomeTabs}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Login"
+            component={LogIn}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name='CategoryDetail'
+            component={CategoryDetailScreen} />
+
+          <Stack.Screen
+            name='ProductDetail'
+            component={ProductDetailScreen} />
+
+          <Stack.Screen
+            name='ProductInfo'
+            component={ProductInfo} />
+
+          <Stack.Screen
+            name='Favourite'
+            component={Favourite} />
+
+
+          <Stack.Screen
+            name='Address'
+            component={Address} />
+
+
+          <Stack.Screen
+            name='AddAddress'
+            component={AddAddress} />
+
+            
+          <Stack.Screen
+            name='Dropdown'
+            component={DropdownComponent} />
+
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
+  );
+}
+
+
+const styles = StyleSheet.create({});
 
 export default App;
